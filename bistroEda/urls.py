@@ -8,10 +8,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('cart/', include('cart.urls', namespace='cart')),
-    path('', include('menu.urls', namespace='menu')),
+    path('', include('menu.urls', namespace='index')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('api/', include('menu.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

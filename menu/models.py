@@ -42,7 +42,7 @@ class MainCourse(models.Model):
     image = models.ImageField("Фото", upload_to="photo/", blank=True)
     allergen = models.ManyToManyField(Allergen, verbose_name="Аллерген", related_name="allergens")
     available = models.BooleanField("Наличие", default=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=False)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     slug = models.SlugField(max_length=160, unique=True)
 
     def get_absolute_url(self):

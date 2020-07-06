@@ -23,19 +23,6 @@ class MainCourseListView(APIView):
             serializer.save()
         return Response(serializer.data)
 
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('Название', instance.name)
-        instance.nutritionalValue = validated_data.get('Пищенвая ценность', instance.nutritionalValue)
-        instance.description = validated_data.get('Описание', instance.description)
-        instance.price = validated_data.get('Цена', instance.price)
-        instance.image = validated_data.get('Фото', instance.image)
-        instance.allergen = validated_data.get('Аллерген', instance.allergen)
-        instance.available = validated_data.get('Наличие', instance.available)
-        instance.category = validated_data.get('Категория', instance.category)
-        instance.slug = validated_data.get('slug', instance.slug)
-        instance.save()
-        return instance
-
 
 class MainCourseDetailView(APIView):
     """Вывод блюда"""

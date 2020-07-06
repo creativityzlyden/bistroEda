@@ -11,6 +11,25 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import yaml
+
+from django.core.exceptions import ImproperlyConfigured
+
+with open('/bistroEda/settings.yaml', 'r') as stream:
+    try:
+        data = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
+
+
+def from_environ(setting, data=data):
+    """Get the variable value or return explicit exception."""
+    try:
+        return data[setting]
+    except KeyError:
+        error_msg = "Set the {0} environment variable".format(setting)
+    raise ImproperlyConfigured(error_msg)
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +39,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8l_tpn3w7#gbta1xj4rw*pfoxy88@2mxx=9iwoajhn68uqm68q'
+SECRET_KEY = from_environ('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
