@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.views import APIView
 from .models import Allergen, MainCourse, Category
 from django.shortcuts import render, get_object_or_404
@@ -8,10 +9,6 @@ from cart.forms import CartAddProductForm
 
 class MainCourseListView(APIView):
     """Вывод списка блюд"""
-
-    def create(self, validated_data):
-        return MainCourse.objects.create(**validated_data)
-
     def get(self, request):
         main_courses = MainCourse.objects.all()
         serializer = MainCourseSerializer(main_courses, many=True)
@@ -21,7 +18,9 @@ class MainCourseListView(APIView):
         serializer = MainCourseSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-        return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MainCourseDetailView(APIView):

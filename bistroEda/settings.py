@@ -226,5 +226,9 @@ CKEDITOR_CONFIGS = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata'
+    'TEST_REQUEST_RENDERER_CLASSES': [
+        'rest_framework.renderers.MultiPartRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.TemplateHTMLRenderer'
+    ]
 }

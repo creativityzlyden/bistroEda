@@ -10,7 +10,6 @@ urlpatterns = [
     path('cart/', include('cart.urls', namespace='cart')),
     path('', include('menu.urls', namespace='index')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('api/', include('menu.urls')),
 ]
 
 if settings.DEBUG:

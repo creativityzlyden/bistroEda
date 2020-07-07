@@ -5,16 +5,18 @@ from rest_framework import status
 
 class MainCourseTestCase(APITestCase):
 
-    def test_mainCourse(self):
-        response = self.client.get(reverse('menu:add'))
-        print(response)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    # def test_mainCourse(self):
+    #     response = self.client.get(reverse('menu:add'))
+    #     print(response)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_dish_page_status_code(self):
         url = reverse("menu:add")
         data = {
                 "category": "Напитки",
-                "allergen": ["Рыба"],
+                "allergen": [
+                    "Рыба"
+                ],
                 "name": "Пелядевый сок",
                 "nutritionalValue": 100,
                 "description": "Только у нас!",
@@ -23,5 +25,6 @@ class MainCourseTestCase(APITestCase):
                 "available": "true",
                 "slug": "juice"
                 }
-        response = self.client.post(url, data, content_type='multipart/form-data')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.post(url, data, content_type="multipart/form-data")
+        print(response)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
