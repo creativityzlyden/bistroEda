@@ -13,16 +13,15 @@ class MainCourseTestCase(APITestCase):
     def test_dish_page_status_code(self):
         url = reverse("menu:add")
         data = {
-                "id": "15",
                 "category": "Напитки",
-                "allergen": "рыба",
+                "allergen": ["Рыба"],
                 "name": "Пелядевый сок",
-                "nutritionalValue": "100",
-                "description": "Только у нас",
-                "price": "5000",
-                "image": "/media/photo/No_photo_zuuzXmv.jpg",
-                "available": '',
+                "nutritionalValue": 100,
+                "description": "Только у нас!",
+                "price": 300.00,
+                "image": "/static/img/No_photo.jpg",
+                "available": "true",
                 "slug": "juice"
                 }
-        response = self.client.post(url, data)
+        response = self.client.post(url, data, content_type='multipart/form-data')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
