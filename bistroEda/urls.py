@@ -10,6 +10,9 @@ urlpatterns = [
     path('cart/', include('cart.urls', namespace='cart')),
     path('', include('menu.urls', namespace='index')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
 ]
 
 if settings.DEBUG:

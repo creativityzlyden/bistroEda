@@ -25,7 +25,6 @@ class MainCourseAdmin(admin.ModelAdmin):
     list_filter = ['available', 'allergen']
     list_editable = ['price', 'available']
     prepopulated_fields = {'slug': ('name',)}
-    form = MainCourseAdminForm
 
 
 admin.site.register(MainCourse, MainCourseAdmin)

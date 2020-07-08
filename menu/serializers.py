@@ -21,6 +21,7 @@ class MainCourseSerializer(serializers.ModelSerializer):
                                             queryset=Allergen.objects.all(),
                                             allow_null=False, required=True,
                                             slug_field='name')
+    image = serializers.ImageField(max_length=None, use_url=True, )
 
     class Meta:
         model = MainCourse

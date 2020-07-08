@@ -1,18 +1,19 @@
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework import status, generics, permissions
 from .models import Allergen, MainCourse, Category
 from django.shortcuts import render, get_object_or_404
 from .serializers import MainCourseSerializer, MainCourseDetailSerializer
 from cart.forms import CartAddProductForm
 
 
-class MainCourseListView(APIView):
+class MainCourseListView(generics.ListAPIView):
     """Вывод списка блюд"""
-    def get(self, request):
+    serializer_class = MainCourseSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
         main_courses = MainCourse.objects.all()
-        serializer = MainCourseSerializer(main_courses, many=True)
-        return Response({'Меню': serializer.data})
+        return main_courses
 
     def post(self, request):
         serializer = MainCourseSerializer(data=request.data)
@@ -23,12 +24,10 @@ class MainCourseListView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MainCourseDetailView(APIView):
+class MainCourseDetailView(generics.RetrieveAPIView):
     """Вывод блюда"""
-    def get(self, request, pk):
-        dish = MainCourse.objects.get(id=pk)
-        serializer = MainCourseDetailSerializer(dish)
-        return Response(serializer.data)
+    queryset = MainCourse.objects.filter()
+    serializer_class = MainCourseDetailSerializer
 
 
 def product_list(request, category_slug=None):
