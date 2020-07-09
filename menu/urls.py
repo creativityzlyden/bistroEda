@@ -14,6 +14,8 @@ urlpatterns = [
     path('<int:id>/<slug:slug>/', views.product_detail, name='product_detail'),
     path('api/dish/', views.MainCourseListView.as_view(), name='add'),
     path('api/dish/<int:pk>/', views.MainCourseDetailView.as_view(), name='api_detail'),
+    path('api/category/', views.CategoryAdd.as_view(), name='categoryAdd'),
+    path('api/allergen/', views.AllergenAdd.as_view(), name='allergenAdd'),
 ]
 
 if settings.DEBUG:

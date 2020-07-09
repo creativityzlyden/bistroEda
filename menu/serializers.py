@@ -2,6 +2,20 @@ from rest_framework import serializers
 from .models import MainCourse, Category, Allergen
 
 
+class AddAllergenSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Allergen
+        fields = '__all__'
+
+
+class AddCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
 class MainCourseDetailSerializer(serializers.ModelSerializer):
     """Описание блюда"""
     category = serializers.SlugRelatedField(slug_field="name", read_only=True)
@@ -21,7 +35,6 @@ class MainCourseSerializer(serializers.ModelSerializer):
                                             queryset=Allergen.objects.all(),
                                             allow_null=False, required=True,
                                             slug_field='name')
-    image = serializers.ImageField(max_length=None, use_url=True, )
 
     class Meta:
         model = MainCourse

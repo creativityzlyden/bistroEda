@@ -2,8 +2,34 @@ from rest_framework.response import Response
 from rest_framework import status, generics, permissions
 from .models import Allergen, MainCourse, Category
 from django.shortcuts import render, get_object_or_404
-from .serializers import MainCourseSerializer, MainCourseDetailSerializer
+from .serializers import MainCourseSerializer, MainCourseDetailSerializer, AddCategorySerializer, AddAllergenSerializer
 from cart.forms import CartAddProductForm
+
+
+class AllergenAdd(generics.ListAPIView):
+    queryset = Allergen.objects.filter()
+    serializer_class = AddAllergenSerializer
+
+    def post(self, request):
+        serializer = AddAllergenSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CategoryAdd(generics.ListAPIView):
+    queryset = Category.objects.filter()
+    serializer_class = AddCategorySerializer
+
+    def post(self, request):
+        serializer = AddCategorySerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MainCourseListView(generics.ListAPIView):

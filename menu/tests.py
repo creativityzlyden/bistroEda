@@ -1,53 +1,61 @@
-import json
-from django.contrib.auth.models import User
+import io
+
+import mock
+from PIL import Image
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 from django.urls import reverse
-from rest_framework.authtoken.models import Token
-from rest_framework.test import APITestCase
+from django.contrib.auth.models import User
+from django.core.files import File
+
 from rest_framework import status
-from menu.models import MainCourse
-from menu.serializers import MainCourseSerializer
+from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
+from menu.models import Category, Allergen
 
 
-class MainCourseTestCase(APITestCase):
+class MainCourseTests(APITestCase):
 
-    def setUP(self):
-        self.user = User.objects.create_user(username="SpongeBob", password="SquarePants")
-        self.token = Token.objects.create(user=self.user)
-        self.api_authentication()
+    def setUp(self):
 
-    def api_authentication(self):
-        self.client.credentials(HTTP_AUTHENTICATION="Token " + self.token)
+        file_mock = mock.MagicMock(spec=File)
+        file_mock.name = "No_photo.jpg"
 
-    # def test_mainCourse(self):
-    #     # factory = APIRequestFactory()
-    #     # user = User.objects.get(username='olivia')
-    #     # view = AccountDetail.as_view()
-    #
-    #     # Make an authenticated request to the view...
-    #     # request = factory.get(reverse('menu:add'))
-    #     # force_authenticate(request, user=user)
-    #     # response = view(request)
-    #     client = APIClient()
-    #     client.login(username='admin', password='admin')
-    #     response = self.client.get(reverse('menu:add'))
-    #     print(response)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user_test1 = User.objects.create_user(username='SpongeBob', password='SquarePants')
+        user_test1.save()
+        user_test2 = User.objects.create_user(username='Patrick', password='Star')
+        user_test2.save()
 
-    def test_dish_page_status_code(self):
-        url = reverse("menu:add")
-        data = {
-                "category": "Напитки",
-                "allergen": [
-                    "Рыба"
-                ],
-                "name": "Пелядевый сок",
-                "nutritionalValue": 100,
-                "description": "Только у нас!",
-                "price": 300.00,
-                "image": "/static/img/No_photo.jpg",
-                "available": "true",
-                "slug": "juice"
-                }
-        response = self.client.post(url, data, content_type="multipart/form-data")
-        print(response)
+        Category.objects.create(name="Напитки", slug="drinks")
+        Allergen.objects.create(name="Рыба")
+
+        image = io.BytesIO()
+        Image.new("RGB", (150, 150)).save(image, "JPEG")
+        image.seek(0)
+
+        image_file = SimpleUploadedFile("No_photo.jpg", image.getvalue())
+
+        self.data = {
+            "category": "Напитки",
+            "allergen":  "Рыба",
+            "image": image_file,
+            "name": "Бульон",
+            "nutritionalValue": 300,
+            "description": "Чтобы ничего не пропадало",
+            "price": 500.00,
+            "available": True,
+            "slug": "water"
+        }
+
+        self.user_test1_token = Token.objects.create(user=user_test1)
+        self.user_test2_token = Token.objects.create(user=user_test2)
+
+    def test_add_dish(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_test1_token.key)
+        response = self.client.post(reverse('menu:add'), self.data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_dish_list(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_test1_token.key)
+        response = self.client.get(reverse('menu:add'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
