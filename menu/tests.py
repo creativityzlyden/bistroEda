@@ -59,3 +59,8 @@ class MainCourseTests(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_test1_token.key)
         response = self.client.get(reverse('menu:add'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_token(self):
+        response = self.client.get(reverse('menu:add'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
