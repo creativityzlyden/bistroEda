@@ -1,15 +1,10 @@
-FROM python:3.7
-MAINTAINER bistroEda test
+FROM python:3
+MAINTAINER babushkin.a.l@yandex.ru
 
 ENV PYTHONUNBUFFERED 1
-
-COPY ./requirements.txt ./requirements.txt
-RUN pip install -r requirements.txt
-
 RUN mkdir /code
 WORKDIR /code
 COPY . /code/
+RUN pip install -r requirements.txt
 
-RUN adduser -D user
-USER user
 
